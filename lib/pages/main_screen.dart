@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/pages/Auth/login_signup_screen.dart';
+import 'package:playbeat/pages/Auth/sign_in_user.dart';
 import 'package:playbeat/pages/home/home_page.dart';
 import 'package:playbeat/resuableComponents/Buttons/round_button.dart';
 
@@ -73,7 +73,7 @@ class MainScreen extends StatelessWidget {
               children: [
                 RoundButton(
                   size: size,
-                  isLogin: true,
+                  text: 'login as user',
                   onPress: () {
                     Get.to(
                       const AuthScreen(isSignup: false),
@@ -85,7 +85,7 @@ class MainScreen extends StatelessWidget {
                 ),
                 RoundButton(
                   size: size,
-                  isLogin: false,
+                  text: 'login as admin',
                   onPress: () {
                     Get.to(
                       const AuthScreen(isSignup: true),

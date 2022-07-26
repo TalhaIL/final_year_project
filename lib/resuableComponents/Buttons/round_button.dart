@@ -4,12 +4,12 @@ class RoundButton extends StatelessWidget {
   const RoundButton({
     Key? key,
     required this.size,
-    required this.isLogin,
     required this.onPress,
+    required this.text,
   }) : super(key: key);
   final void Function() onPress;
   final Size size;
-  final bool isLogin;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class RoundButton extends StatelessWidget {
           minimumSize: Size(size.width * 0.8, 60)),
       onPressed: onPress,
       child: Text(
-        !isLogin ? 'Signup' : 'Login',
+        text,
         style: const TextStyle(fontSize: 20),
       ),
     );

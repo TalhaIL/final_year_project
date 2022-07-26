@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,13 +11,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      drawer: const Drawer(),
       body: Obx(
         () {
           return homeController.pages[homeController.index.value];
@@ -26,10 +20,10 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: Obx(
         () => CurvedNavigationBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
           color: Colors.deepPurple,
           animationDuration: const Duration(milliseconds: 250),
-          height: 60,
+          height: 55,
           onTap: (index) {
             homeController.index.value = index;
             log(index.toString());

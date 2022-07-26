@@ -63,7 +63,13 @@ flutter:
   assets:
     - assets/images/mic_drop.png
     - assets/images/headphone.png
-
+    - assets/images/categories/pop.jpg
+    - assets/images/categories/rock.jpg 
+    - assets/images/categories/hiphop.jpg 
+    - assets/images/categories/electronic.jpg
+    - assets/images/categories/classic.jpg 
+    
+     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
