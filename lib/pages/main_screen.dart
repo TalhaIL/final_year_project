@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:playbeat/pages/Auth/sign_in_admin.dart';
 import 'package:playbeat/pages/Auth/sign_in_user.dart';
 import 'package:playbeat/pages/home/home_page.dart';
-import 'package:playbeat/resuableComponents/Buttons/round_button.dart';
+import 'package:playbeat/pages/Widgets/round_button.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class MainScreen extends StatelessWidget {
                   top: 10,
                   child: TextButton(
                     onPressed: () {
-                      Get.to(HomePage());
+                      Get.to(() => HomePage());
                     },
                     child: const Text(
                       'Skip',
@@ -37,7 +38,7 @@ class MainScreen extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
                 children: const [
                   Text(
@@ -68,31 +69,30 @@ class MainScreen extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                RoundButton(
-                  size: size,
-                  text: 'login as user',
-                  onPress: () {
-                    Get.to(
-                      const AuthScreen(isSignup: false),
-                    );
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                RoundButton(
-                  size: size,
-                  text: 'login as admin',
-                  onPress: () {
-                    Get.to(
-                      const AuthScreen(isSignup: true),
-                    );
-                  },
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  RoundButton(
+                    size: size,
+                    text: 'login as user',
+                    onPress: () {
+                      Get.to(() => AuthScreen());
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  RoundButton(
+                    size: size,
+                    text: 'login as admin',
+                    onPress: () {
+                      Get.to(() => AdminSignIn());
+                    },
+                  ),
+                ],
+              ),
             )
           ],
         ),

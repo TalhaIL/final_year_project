@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/pages/home/home_controller.dart';
+import 'package:playbeat/Controllers/home_controller.dart';
 
 class HomePage extends StatelessWidget {
   final homeController = Get.put(HomeController());

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playbeat/pages/categories/category_page.dart';
-import 'package:playbeat/pages/favorite/favorite.dart';
+import 'package:playbeat/pages/favorite/favorites_page.dart';
 import 'package:playbeat/pages/upload/upload.dart';
 
 class HomeController extends GetxController {
-  RxInt index = 1.obs;
+  RxInt index = 0.obs;
   final List<Icon> items = [
     const Icon(
       Icons.home_filled,
@@ -26,7 +26,7 @@ class HomeController extends GetxController {
 
   final List<Widget> pages = [
     const CategoryPage(),
-    const UploadPage(),
+    UploadPage(),
     const FavoritePage(),
   ];
 }
