@@ -1,13 +1,44 @@
 import 'dart:developer';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:playbeat/Controllers/upload_controller.dart';
+import 'package:playbeat/Models/song.dart';
+import 'package:playbeat/Services/db_services.dart';
+import 'package:playbeat/Services/storage_services.dart';
+import 'package:playbeat/Utilities/input_valiators.dart';
+import 'package:playbeat/Utilities/overlays_widgets.dart';
+import 'package:playbeat/pages/Widgets/input_field.dart';
 import 'package:playbeat/pages/Widgets/round_button.dart';
 
-class UploadPage extends StatelessWidget {
-  UploadPage({Key? key}) : super(key: key);
+class UploadPage extends StatefulWidget {
+  const UploadPage({Key? key}) : super(key: key);
 
+  @override
+  State<UploadPage> createState() => _UploadPageState();
+}
+
+class _UploadPageState extends State<UploadPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController singerController = TextEditingController();
+  final TextEditingController writerController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+  final TextEditingController musicController = TextEditingController();
+  PlatformFile? pickedImageFile;
+  PlatformFile? pickedAudioFile;
+  DateTime selectedDate = DateTime.now();
+
+  String selectedCategory = 'Pop';
+  List<String> categoryList = [
+    'Pop',
+    'Rock',
+    'Hip Hop',
+    'Electronic',
+    'Classic',
+    'Others'
+  ];
   final uploadController = Get.put(UploadController());
 
   @override
@@ -18,78 +49,15 @@ class UploadPage extends StatelessWidget {
         title: const Text('Upload your music'),
       ),
       body: SizedBox(
-        height: size.height * 0.8,
+        height: size.height * 0.81,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 25,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                inputField(title: 'Title', hint: 'Enter title'),
-                inputField(title: 'Singer', hint: 'Enter Singer Name'),
-                inputField(title: 'Writer', hint: 'Enter Writer Name'),
-                inputField(
-                  title: 'Date',
-                  hint: DateFormat.yMd().format(uploadController.selectedDate),
-                  widget: Container(),
-                ),
-                Obx(
-                  () => inputField(
-                    title: 'Category',
-                    hint: uploadController.selectedCategory.value,
-                    widget: DropdownButton(
-                      items: uploadController.categoryList
-                          .map<DropdownMenuItem<String>>(
-                              (value) => DropdownMenuItem<String>(
-                                    value: value.toString(),
-                                    child: Text(
-                                      value.toString(),
-                                    ),
-                                  ))
-                          .toList(),
-                      onChanged: (value) {
-                        uploadController.selectedCategory.value =
-                            value.toString();
-                        log(uploadController.selectedCategory.value);
-                      },
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                inputField(
-                  title: 'Image',
-                  hint: 'Pick background image for music',
-                  widget: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.image),
-                  ),
-                ),
-                Obx((() => inputField(
-                      title: 'Media',
-                      hint: uploadController.selectedSong.value,
-                      widget: IconButton(
-                        onPressed: uploadController.pickFile,
-                        icon: const Icon(Icons.audio_file),
-                      ),
-                    ))),
-                const SizedBox(
-                  height: 30,
-                ),
-                RoundButton(
-                    size: size,
-                    onPress: () {
-                      log(uploadController.musicFiles.length.toString());
-                    },
-                    text: 'Upload'),
-                const SizedBox(
-                  height: 20,
-                )
-              ],
+            child: Form(
+              key: _formKey,
+              child: inputFields(size),
             ),
           ),
         ),
@@ -97,75 +65,148 @@ class UploadPage extends StatelessWidget {
     );
   }
 
-  Container inputField({
-    String? title,
-    String? hint,
-    TextEditingController? controller,
-    Widget? widget,
-  }) {
+  void imagePicker() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
+    if (result == null) return;
+    setState(() {
+      pickedImageFile = result.files.first;
+      imageController.text = pickedImageFile!.name;
+    });
+  }
+
+  void audioPicker() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result == null) return;
+    setState(() {
+      pickedAudioFile = result.files.first;
+      musicController.text = pickedAudioFile!.name;
+    });
+  }
+
+  Column inputFields(Size size) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 20,
+        ),
+        const CircleAvatar(
+          radius: 60,
+          backgroundImage: AssetImage('assets/images/Logo.jpg'),
+        ),
+        inputField(
+            hint: 'Title',
+            controller: titleController,
+            textInputType: TextInputType.name,
+            validator: requiredValidator,
+            iconPrefix: Icons.title),
+        inputField(
+            hint: 'Singer',
+            controller: singerController,
+            textInputType: TextInputType.name,
+            validator: requiredValidator,
+            iconPrefix: Icons.person),
+        inputField(
+            hint: 'Writer',
+            controller: writerController,
+            textInputType: TextInputType.name,
+            validator: requiredValidator,
+            iconPrefix: Icons.person),
+        inputField(
+            hint: DateFormat.yMd().format(selectedDate),
+            widget: Container(),
+            iconPrefix: Icons.date_range),
+        dropDownButton(),
+        inputField(
+          hint: 'Choose an image',
+          controller: imageController,
+          validator: requiredValidator,
+          widget: IconButton(
+            onPressed: imagePicker,
+            icon: const Icon(Icons.image),
+          ),
+          iconPrefix: Icons.image,
+        ),
+        inputField(
+            hint: 'Pick an audio file',
+            controller: musicController,
+            validator: requiredValidator,
+            widget: IconButton(
+              onPressed: audioPicker,
+              icon: const Icon(Icons.audio_file),
+            ),
+            iconPrefix: Icons.audio_file),
+        const SizedBox(
+          height: 30,
+        ),
+        RoundButton(
+          size: size,
+          onPress: () async {
+            if (_formKey.currentState!.validate()) {
+              try {
+                loadingOverlay('Uploading');
+                final imageUrl =
+                    await StorageService().uploadImageFile(pickedImageFile);
+                final songUrl =
+                    await StorageService().uploadAudioFile(pickedAudioFile);
+                SongModel songModel = SongModel(
+                    title: titleController.text,
+                    singer: singerController.text,
+                    writer: writerController.text,
+                    uploadedDate: selectedDate,
+                    category: selectedCategory,
+                    imageUrl: imageUrl,
+                    songUrl: songUrl);
+                await DBServices().uploadSong(songModel);
+                Get.back(closeOverlays: true);
+              } catch (e) {
+                errorOverlay(e.toString());
+                log(e.toString());
+              }
+            }
+          },
+          text: 'Upload',
+        ),
+        const SizedBox(
+          height: 20,
+        )
+      ],
+    );
+  }
+
+  Container dropDownButton() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title.toString(),
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
-            ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(color: Colors.purple, width: 1.5)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton(
+          isExpanded: true,
+          value: selectedCategory,
+          onChanged: (value) {
+            if (value is String) {
+              setState(() {
+                selectedCategory = value;
+              });
+            }
+          },
+          icon: const Icon(
+            Icons.keyboard_arrow_down,
+            color: Colors.black,
           ),
-          Container(
-            padding: const EdgeInsets.only(left: 10),
-            margin: const EdgeInsets.only(top: 8),
-            height: 48,
-            decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(22)),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    readOnly: widget == null ? false : true,
-                    autofocus: false,
-                    cursorColor: Colors.grey[700],
-                    controller: controller,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[700],
-                    ),
-                    decoration: InputDecoration(
-                      hintText: hint,
-                      hintStyle: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[700],
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 0,
+          items: categoryList
+              .map<DropdownMenuItem<String>>(
+                  (value) => DropdownMenuItem<String>(
+                        value: value.toString(),
+                        child: Text(
+                          value.toString(),
                         ),
-                      ),
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                if (widget != null)
-                  Container(
-                    child: widget,
-                  )
-              ],
-            ),
-          ),
-        ],
+                      ))
+              .toList(),
+        ),
       ),
     );
   }

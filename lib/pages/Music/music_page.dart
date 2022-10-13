@@ -1,95 +1,87 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:playbeat/Controllers/upload_controller.dart';
+import 'package:playbeat/Models/song.dart';
+import 'package:playbeat/Utilities/overlays_widgets.dart';
+import 'package:playbeat/pages/Widgets/music_container.dart';
 
-class MusicScreen extends StatelessWidget {
-  MusicScreen({Key? key}) : super(key: key);
-  final uploadController = Get.put(UploadController());
+class SongView extends StatelessWidget {
+  final String? categoryId;
+  final bool? isAllSongs;
+  const SongView({Key? key, this.categoryId, this.isAllSongs})
+      : super(key: key);
+
+  Future getSongsData() async {
+    try {
+      FirebaseFirestore fireStore = FirebaseFirestore.instance;
+      QuerySnapshot snapshot = await fireStore.collection('songs').get();
+      return snapshot.docs;
+    }
+    
+     catch (e) {
+      errorOverlay(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: isAllSongs == true
+          ? null
+          : AppBar(
+              title: Text(categoryId.toString()),
+            ),
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-          child: ListView.builder(
-            itemCount: uploadController.musicFiles.length,
-            itemBuilder: ((context, index) => InkWell(
-                  onTap: () {
-                    uploadController.openFile(index);
-                  },
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 70,
-                        width: double.infinity,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 70,
-                                  width: 100,
-                                  child: Image(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage(
-                                        'assets/images/SongsImages/ayaLariye.jpg'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 30,
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Text(
-                                      'Aya Lariye',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Nadeem Baig',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    Text(
-                                      '19 MB | 1:25',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.favorite),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                        child: Divider(
-                          thickness: 0.7,
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+        child: FutureBuilder(
+          future: getSongsData(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot data = snapshot.data[index];
+                  if (categoryId == data['category'] || isAllSongs == true) {
+                    return MusicContainer(
+                      isAdmin: false,
+                      title: data['title'],
+                      singer: data['singer'],
+                      writer: data['writer'],
+                      uploadedDate: data['uploadedDate'],
+                      imageUrl: data['imageUrl'],
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              );
+            } else {
+              if (snapshot.hasError) {
+                log(snapshot.error.toString());
+                return Text(snapshot.error.toString());
+              }
+              log('error');
+              return const Text('Error');
+            }
+          },
         ),
       ),
     );
+  }
+}
+
+class PlayerHome extends StatelessWidget {
+  final SongModel? song;
+  const PlayerHome({super.key, this.song});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

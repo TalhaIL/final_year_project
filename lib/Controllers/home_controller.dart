@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/pages/categories/category_page.dart';
-import 'package:playbeat/pages/favorite/favorites_page.dart';
-import 'package:playbeat/pages/upload/upload.dart';
+import 'package:playbeat/pages/Categories/category_page.dart';
+import 'package:playbeat/pages/Favorite/favorites_page.dart';
+import 'package:playbeat/pages/Upload/upload.dart';
 
 class HomeController extends GetxController {
+  RxBool isAllSongsPage = true.obs;
   RxInt index = 0.obs;
   final List<Icon> items = [
     const Icon(
@@ -26,7 +27,7 @@ class HomeController extends GetxController {
 
   final List<Widget> pages = [
     const CategoryPage(),
-    UploadPage(),
+    const UploadPage(),
     const FavoritePage(),
   ];
 }

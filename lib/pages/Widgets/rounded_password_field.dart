@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:playbeat/pages/Widgets/text_field_container.dart';
 
 class RoundedPasswordField extends StatelessWidget {
+  final TextEditingController? controller;
   final bool isVisible;
   final Icon icon;
   final String hintText;
@@ -10,6 +11,7 @@ class RoundedPasswordField extends StatelessWidget {
   final void Function() onPressed;
   const RoundedPasswordField({
     Key? key,
+    this.controller,
     required this.icon,
     required this.hintText,
     required this.onChanged,
@@ -22,6 +24,8 @@ class RoundedPasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFieldContainer(
       child: TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        controller: controller,
         onChanged: onChanged,
         decoration: InputDecoration(
           icon: icon,

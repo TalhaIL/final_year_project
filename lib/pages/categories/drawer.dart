@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:playbeat/Controllers/auth_controller.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -46,15 +47,16 @@ class CustomDrawer extends StatelessWidget {
                 drawerItem(
                   icon: Icons.privacy_tip_outlined,
                   text: 'Privacy Policy',
+                  onPress: () {},
                 ),
                 drawerItem(
-                  icon: Icons.info_outline,
-                  text: 'About',
-                ),
+                    icon: Icons.info_outline, text: 'About', onPress: () {}),
                 drawerItem(
-                  icon: Icons.logout,
-                  text: 'Logout',
-                ),
+                    icon: Icons.logout,
+                    text: 'Logout',
+                    onPress: () {
+                      AuthController.instance.logout();
+                    }),
               ],
             ),
           )
@@ -92,24 +94,30 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Column drawerItem({required String text, required IconData icon}) {
+  Column drawerItem(
+      {required String text,
+      required IconData icon,
+      required void Function()? onPress}) {
     return Column(
       children: [
         const SizedBox(
           height: 20,
         ),
-        Row(
-          children: [
-            Icon(
-              icon,
-              size: 25,
-            ),
-            const SizedBox(width: 20),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 20),
-            ),
-          ],
+        GestureDetector(
+          onTap: onPress,
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 25,
+              ),
+              const SizedBox(width: 20),
+              Text(
+                text,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
           height: 20,

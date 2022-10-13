@@ -40,6 +40,16 @@ dependencies:
   file_picker: ^4.6.1
   open_file: ^3.2.1
   form_field_validator: ^1.1.0
+  firebase_auth: ^3.8.0
+  firebase_core: ^1.22.0
+  cloud_firestore: ^3.4.8
+  loading_animation_widget: ^1.2.0+3
+  firebase_storage: ^10.3.9
+  cached_network_image: ^3.2.2
+  dependencies:
+  internet_connection_checker: ^1.0.0+1
+  just_audio: ^0.9.29
+  audio_service: ^0.18.7
   # open_file: ^2.1.1
 
 dev_dependencies:
@@ -76,6 +86,7 @@ flutter:
     - assets/images/music_icon.png
     - assets/images/Admin.png
     - assets/images/SongsImages/ayaLariye.jpg
+    - assets/images/Logo.jpg
     
      
   # An image asset can refer to one or more resolution-specific "variants", see

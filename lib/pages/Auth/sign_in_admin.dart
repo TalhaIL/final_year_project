@@ -1,15 +1,18 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/pages/Admin/admin_approval_page.dart';
 import 'package:playbeat/Controllers/auth_controller.dart';
+import 'package:playbeat/Utilities/input_valiators.dart';
+import 'package:playbeat/pages/Admin/admin_approval_page.dart';
 import 'package:playbeat/pages/Widgets/round_button.dart';
 import 'package:playbeat/pages/Widgets/rounded_password_field.dart';
 import 'package:playbeat/pages/Widgets/rounded_text_field.dart';
 
 class AdminSignIn extends StatelessWidget {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final authController = Get.put(AuthController());
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   AdminSignIn({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,7 @@ class AdminSignIn extends StatelessWidget {
         () => SafeArea(
           child: SingleChildScrollView(
             child: Form(
+              key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,46 +42,48 @@ class AdminSignIn extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         RoundedTextField(
-                          icon: const Icon(Icons.person),
-                          onChanged: (value) {
-                            log(value);
-                          },
-                          hintText: 'Enter admin email',
-                          validator: MultiValidator(
-                            [
-                              RequiredValidator(errorText: 'Required'),
-                              EmailValidator(
-                                  errorText: 'Please enter a valid email'),
-                            ],
-                          ),
-                        ),
+                            icon: const Icon(Icons.person),
+                            onChanged: (value) {
+                              log(value);
+                            },
+                            controller: emailController,
+                            hintText: 'Enter admin email',
+                            validator: emailValidator),
                         const SizedBox(
                           height: 30,
                         ),
                         RoundedPasswordField(
-                          icon: const Icon(Icons.lock),
-                          hintText: 'Enter admin password',
-                          onChanged: (value) {
-                            log(value);
-                          },
-                          onPressed: () {
-                            authController.isVisible.value =
-                                !authController.isVisible.value;
-                          },
-                          isVisible: authController.isVisible.value,
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: 'Required'),
-                          ]),
-                        ),
+                            icon: const Icon(Icons.lock),
+                            hintText: 'Enter admin password',
+                            onChanged: (value) {
+                              log(value);
+                            },
+                            controller: passwordController,
+                            onPressed: () {
+                              authController.isVisible.value =
+                                  !authController.isVisible.value;
+                            },
+                            isVisible: authController.isVisible.value,
+                            validator: passwordValidator),
                         const SizedBox(
                           height: 40,
                         ),
                         RoundButton(
-                            size: size,
-                            onPress: () {
-                              Get.to(() => const AdminApproval());
-                            },
-                            text: 'Login')
+                          size: size,
+                          onPress: () async {
+                            if (_formKey.currentState!.validate()) {
+                              bool isAdmin =
+                                  await AuthController.instance.adminLogin(
+                                emailController.text.trim(),
+                                passwordController.text,
+                              );
+                              if (isAdmin) {
+                                Get.off(() => const AdminApproval());
+                              }
+                            }
+                          },
+                          text: 'Login',
+                        )
                       ],
                     ),
                   ),

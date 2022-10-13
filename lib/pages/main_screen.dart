@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playbeat/pages/Auth/sign_in_admin.dart';
 import 'package:playbeat/pages/Auth/sign_in_user.dart';
-import 'package:playbeat/pages/home/home_page.dart';
 import 'package:playbeat/pages/Widgets/round_button.dart';
 
 class MainScreen extends StatelessWidget {
@@ -17,23 +16,10 @@ class MainScreen extends StatelessWidget {
         child: Column(
           children: [
             Stack(
-              children: [
-                const Image(
+              children: const [
+                Image(
                   height: 350,
                   image: AssetImage('assets/images/mic_drop.png'),
-                ),
-                Positioned(
-                  right: 0,
-                  top: 10,
-                  child: TextButton(
-                    onPressed: () {
-                      Get.to(() => HomePage());
-                    },
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
                 ),
               ],
             ),
@@ -78,7 +64,9 @@ class MainScreen extends StatelessWidget {
                     size: size,
                     text: 'login as user',
                     onPress: () {
-                      Get.to(() => AuthScreen());
+                      Get.to(
+                        () => const AuthScreen(),
+                      );
                     },
                   ),
                   const SizedBox(

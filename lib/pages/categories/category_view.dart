@@ -1,13 +1,15 @@
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:playbeat/Controllers/home_controller.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
-import 'package:playbeat/pages/Categories/category_view.dart';
-import 'package:playbeat/pages/Categories/drawer.dart';
 import 'package:playbeat/pages/Music/music_page.dart';
 
-class CategoryPage extends StatelessWidget {
-  const CategoryPage({super.key});
+class CategoryView extends StatelessWidget {
+  CategoryView({super.key});
+  final homeController = Get.put(HomeController());
 
   Future getData() async {
     try {
@@ -21,53 +23,44 @@ class CategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        drawer: const CustomDrawer(),
-        appBar: appBar(),
-        body: TabBarView(
-          children: [
-            CategoryView(),
-            const SongView(
-              isAllSongs: true,
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      title: const Text(
-        'Play Beat',
-        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-      ),
-      iconTheme: const IconThemeData(
-        color: Colors.white,
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications),
-        )
-      ],
-      backgroundColor: Colors.deepPurple,
-      elevation: 0,
-      bottom: const TabBar(
-        indicatorColor: Colors.white,
-        padding: EdgeInsets.only(bottom: 10),
-        indicatorSize: TabBarIndicatorSize.label,
-        indicatorWeight: 2.5,
-        labelStyle: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
-        labelColor: Colors.white,
-        tabs: [
-          Tab(text: 'Categories'),
-          Tab(
-            text: 'All',
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+      child: FutureBuilder(
+        future: getData(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot data = snapshot.data[index];
+                return GestureDetector(
+                  onTap: () {
+                    Get.to(
+                      () => SongView(
+                        categoryId: data['title'],
+                        isAllSongs: false,
+                      ),
+                    );
+                  },
+                  child: categoryContainer(
+                      categoryName: data['title'], imageUrl: data['imageUrl']),
+                );
+              },
+            );
+          } else {
+            if (snapshot.hasError) {
+              log(snapshot.error.toString());
+              return Text(snapshot.error.toString());
+            }
+            log('error');
+            return const Text('Error');
+          }
+        },
       ),
     );
   }
