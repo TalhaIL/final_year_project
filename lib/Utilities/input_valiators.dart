@@ -23,4 +23,4 @@ final confirmPasswordValidator =
 
 final requiredValidator = RequiredValidator(errorText: 'Required');
 
-final nullValidatior = MultiValidator([]);
+// final nullValidatior = MultiValidator([]);

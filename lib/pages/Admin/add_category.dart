@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/Models/category.dart';
+import 'package:playbeat/Models/category_model.dart';
 import 'package:playbeat/Services/db_services.dart';
 import 'package:playbeat/Services/storage_services.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';

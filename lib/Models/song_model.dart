@@ -4,8 +4,10 @@ class SongModel {
   String? songId;
   String? title;
   String? singer;
+  String? status = 'pending';
   String? writer;
-  DateTime? uploadedDate;
+  String? uploadedBy;
+  String? uploadedDate;
   String? category;
   String? imageUrl;
   String? songUrl;
@@ -16,6 +18,7 @@ class SongModel {
     this.singer,
     this.writer,
     this.uploadedDate,
+    this.uploadedBy,
     this.category,
     this.imageUrl,
     this.songUrl,
@@ -25,8 +28,10 @@ class SongModel {
     songId = doc.get('songId');
     title = doc.get('title');
     singer = doc.get('singer');
+    status = doc.get('status');
     writer = doc.get('writer');
     uploadedDate = doc.get('uploadedDate');
+    uploadedBy = doc.get('uploadedBy');
     category = doc.get('category');
     imageUrl = doc.get('imageUrl');
     songUrl = doc.get('songUrl');
@@ -37,6 +42,8 @@ class SongModel {
     data['songId'] = songId;
     data['title'] = title;
     data['singer'] = singer;
+    data['status'] = status;
+    data['uploadedBy'] = uploadedBy;
     data['writer'] = writer;
     data['uploadedDate'] = uploadedDate;
     data['category'] = category;

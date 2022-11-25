@@ -2,9 +2,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:playbeat/Controllers/bindings.dart';
+import 'package:playbeat/Models/user_model.dart';
+import 'package:playbeat/Services/db_services.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/pages/Home/home_page.dart';
 import 'package:playbeat/pages/main_screen.dart';
+// import 'package:playbeat/pages/Auth/verify_email.dart';
+// import 'package:playbeat/pages/main_screen.dart';
 
 class AuthController extends GetxController {
   static const admin = 'admin';
@@ -14,6 +19,17 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   late Rx<User?> _user;
   FirebaseAuth auth = FirebaseAuth.instance;
+  Rxn<User> firebaseUser = Rxn<User>();
+  User? get user => firebaseUser.value;
+
+  @override
+  void onInit() {
+    firebaseUser.bindStream(auth.authStateChanges());
+    if (user != null) {
+      log(user!.uid);
+    }
+    super.onInit();
+  }
 
   @override
   void onReady() {
@@ -27,15 +43,19 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAll(() => const MainScreen());
     } else {
-      Get.offAll(() => HomePage());
+      Get.offAll(() => const HomePage(), binding: InitBinding());
     }
   }
 
-  Future<void> register(String email, String password) async {
+  Future<void> register(UserModel userModel, String password) async {
     try {
       loadingOverlay("Signing up");
-      await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: userModel.email!,
+        password: password,
+      );
+      userModel.userId = userCredential.user!.uid;
+      await DBServices().createUser(userModel);
     } on FirebaseException catch (e) {
       Get.back();
       errorOverlay(e.message.toString());

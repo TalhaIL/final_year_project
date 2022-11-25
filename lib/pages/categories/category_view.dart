@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playbeat/Controllers/home_controller.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
-import 'package:playbeat/pages/Music/music_page.dart';
+import 'package:playbeat/pages/Music/songs_view.dart';
 
 class CategoryView extends StatelessWidget {
   CategoryView({super.key});
@@ -44,6 +44,8 @@ class CategoryView extends StatelessWidget {
                       () => SongView(
                         categoryId: data['title'],
                         isAllSongs: false,
+                        isAdmin: false,
+                        userUploads: false,
                       ),
                     );
                   },

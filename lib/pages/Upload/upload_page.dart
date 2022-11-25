@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:playbeat/Controllers/upload_controller.dart';
-import 'package:playbeat/Models/song.dart';
+import 'package:playbeat/Models/song_model.dart';
 import 'package:playbeat/Services/db_services.dart';
 import 'package:playbeat/Services/storage_services.dart';
+import 'package:playbeat/Utilities/global_variables.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/pages/Widgets/input_field.dart';
@@ -29,6 +30,7 @@ class _UploadPageState extends State<UploadPage> {
   PlatformFile? pickedImageFile;
   PlatformFile? pickedAudioFile;
   DateTime selectedDate = DateTime.now();
+  // String date = Forma
 
   String selectedCategory = 'Pop';
   List<String> categoryList = [
@@ -151,13 +153,16 @@ class _UploadPageState extends State<UploadPage> {
                 final songUrl =
                     await StorageService().uploadAudioFile(pickedAudioFile);
                 SongModel songModel = SongModel(
-                    title: titleController.text,
-                    singer: singerController.text,
-                    writer: writerController.text,
-                    uploadedDate: selectedDate,
-                    category: selectedCategory,
-                    imageUrl: imageUrl,
-                    songUrl: songUrl);
+                  title: titleController.text,
+                  singer: singerController.text,
+                  writer: writerController.text,
+                  uploadedDate:
+                      DateFormat('yyyy-MM-dd – kk:mm').format(selectedDate),
+                  category: selectedCategory,
+                  imageUrl: imageUrl,
+                  uploadedBy: userID.value,
+                  songUrl: songUrl,
+                );
                 await DBServices().uploadSong(songModel);
                 Get.back(closeOverlays: true);
               } catch (e) {

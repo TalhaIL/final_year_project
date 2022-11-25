@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:playbeat/pages/Categories/category_page.dart';
-import 'package:playbeat/pages/Favorite/favorites_page.dart';
-import 'package:playbeat/pages/Upload/upload.dart';
+import 'package:playbeat/pages/UsersUploads/users_uploads.dart';
+import 'package:playbeat/pages/Upload/upload_page.dart';
 
 class HomeController extends GetxController {
   RxBool isAllSongsPage = true.obs;
@@ -19,7 +19,7 @@ class HomeController extends GetxController {
       color: Colors.white,
     ),
     const Icon(
-      Icons.favorite,
+      Icons.upload_sharp,
       size: 30,
       color: Colors.white,
     ),
@@ -28,6 +28,6 @@ class HomeController extends GetxController {
   final List<Widget> pages = [
     const CategoryPage(),
     const UploadPage(),
-    const FavoritePage(),
+    const UsersUploads()
   ];
 }

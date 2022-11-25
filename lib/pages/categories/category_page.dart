@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/pages/Categories/category_view.dart';
 import 'package:playbeat/pages/Categories/drawer.dart';
-import 'package:playbeat/pages/Music/music_page.dart';
+import 'package:playbeat/pages/Favorites/favorite_page.dart';
+import 'package:playbeat/pages/Music/songs_view.dart';
 
 class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
@@ -22,7 +23,7 @@ class CategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         drawer: const CustomDrawer(),
         appBar: appBar(),
@@ -30,8 +31,11 @@ class CategoryPage extends StatelessWidget {
           children: [
             CategoryView(),
             const SongView(
+              isAdmin: false,
               isAllSongs: true,
-            )
+              userUploads: false,
+            ),
+            const FavoritePage()
           ],
         ),
       ),
@@ -50,7 +54,7 @@ class CategoryPage extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.notifications),
+          icon: const Icon(Icons.search),
         )
       ],
       backgroundColor: Colors.deepPurple,
@@ -63,10 +67,13 @@ class CategoryPage extends StatelessWidget {
         labelStyle: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
         labelColor: Colors.white,
         tabs: [
-          Tab(text: 'Categories'),
+          Tab(text: 'Category'),
           Tab(
             text: 'All',
           ),
+          Tab(
+            icon: Icon(Icons.favorite),
+          )
         ],
       ),
     );

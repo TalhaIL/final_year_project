@@ -43,9 +43,6 @@ class AdminSignIn extends StatelessWidget {
                         const SizedBox(height: 30),
                         RoundedTextField(
                             icon: const Icon(Icons.person),
-                            onChanged: (value) {
-                              log(value);
-                            },
                             controller: emailController,
                             hintText: 'Enter admin email',
                             validator: emailValidator),
