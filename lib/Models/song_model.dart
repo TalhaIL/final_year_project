@@ -11,6 +11,7 @@ class SongModel {
   String? category;
   String? imageUrl;
   String? songUrl;
+  List? likedBy;
 
   SongModel({
     this.songId,
@@ -22,6 +23,7 @@ class SongModel {
     this.category,
     this.imageUrl,
     this.songUrl,
+    this.likedBy,
   });
 
   SongModel.fromFirestore(DocumentSnapshot doc) {
@@ -35,6 +37,7 @@ class SongModel {
     category = doc.get('category');
     imageUrl = doc.get('imageUrl');
     songUrl = doc.get('songUrl');
+    likedBy = doc.get('likedBy');
   }
 
   Map<String, dynamic> toJson() {
@@ -49,6 +52,7 @@ class SongModel {
     data['category'] = category;
     data['imageUrl'] = imageUrl;
     data['songUrl'] = songUrl;
+    data['likedBy'] = likedBy;
     return data;
   }
 }

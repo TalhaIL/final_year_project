@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/Utilities/snack_bar.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
-import 'package:playbeat/pages/Widgets/rounded_text_field.dart';
+import 'package:playbeat/Widgets/round_button.dart';
+import 'package:playbeat/Widgets/rounded_text_field.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});

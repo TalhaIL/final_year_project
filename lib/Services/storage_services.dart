@@ -39,9 +39,6 @@ class StorageService {
     late String musicUrl;
     final path = 'musicFiles/${pickedAudioFile!.name}';
     final file = File(pickedAudioFile.path!);
-
-    // log('Length');
-    // log(length.toString());
     final ref = FirebaseStorage.instance.ref().child(path);
     uploadTask = ref.putFile(file);
     await uploadTask!.whenComplete(() async {

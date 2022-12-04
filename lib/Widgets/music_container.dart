@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:playbeat/Constants/global_var.dart';
+import 'package:playbeat/Utilities/global_variables.dart';
 
 class MusicContainer extends StatelessWidget {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -16,6 +16,8 @@ class MusicContainer extends StatelessWidget {
   final String? title;
   final bool isAdmin;
   final String songId;
+  final bool isLiked;
+  final VoidCallback onLike;
 
   MusicContainer({
     required this.isAdmin,
@@ -25,21 +27,28 @@ class MusicContainer extends StatelessWidget {
     this.title,
     this.category,
     this.writer,
+    required this.isLiked,
     required this.songId,
     this.uploadedDate,
     required this.isUserUpload,
     required this.status,
+    required this.onLike,
   });
 
   @override
   Widget build(BuildContext context) {
+    // bool  = likedBy.contains(userID.value);
     return Obx(() => Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
           decoration: BoxDecoration(
             color: currentAudioText.value == songId
                 ? Colors.deepPurple[200]
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: isUserUpload
+                ? const BorderRadius.horizontal(
+                    left: Radius.circular(12),
+                  )
+                : BorderRadius.circular(12),
           ),
           child: Column(
             children: [
@@ -113,14 +122,15 @@ class MusicContainer extends StatelessWidget {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 10),
+                                            horizontal: 20.0, vertical: 20),
                                         child: Column(
                                           children: [
                                             const Text(
                                               'Details',
                                               style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.bold),
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                             const SizedBox(
                                               height: 20,
@@ -135,11 +145,7 @@ class MusicContainer extends StatelessWidget {
                                                 category.toString()),
                                             musicDetail('Uploaded Date',
                                                 uploadedDate.toString()),
-                                            // musicDetail('Uploaded by',
-                                            //     uploaderName.toString()),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
+                                            const Spacer(),
                                             customMaterialButton(
                                               'Disapprove',
                                               Colors.red,
@@ -150,10 +156,12 @@ class MusicContainer extends StatelessWidget {
                                                     .update({
                                                   'status': 'disapproved'
                                                 });
+                                                Get.back();
                                               },
-                                              const BorderRadius.vertical(
-                                                top: Radius.circular(20),
-                                              ),
+                                              BorderRadius.circular(12),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
                                             ),
                                             customMaterialButton(
                                               'Approve',
@@ -164,10 +172,9 @@ class MusicContainer extends StatelessWidget {
                                                     .doc(songId)
                                                     .update(
                                                         {'status': 'approved'});
+                                                Get.back();
                                               },
-                                              const BorderRadius.vertical(
-                                                bottom: Radius.circular(20),
-                                              ),
+                                              BorderRadius.circular(12),
                                             ),
                                           ],
                                         ),
@@ -192,8 +199,11 @@ class MusicContainer extends StatelessWidget {
                                                 : Colors.red),
                                   )
                                 : IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.favorite_outline))
+                                    onPressed: onLike,
+                                    icon: isLiked
+                                        ? const Icon(Icons.favorite_rounded,
+                                            color: Colors.red)
+                                        : const Icon(Icons.favorite_outline))
                       ],
                     ),
                   ],
@@ -210,8 +220,8 @@ class MusicContainer extends StatelessWidget {
   MaterialButton customMaterialButton(
       String text, Color color, void Function()? onPress, BorderRadius border) {
     return MaterialButton(
-      height: 40,
-      minWidth: 120,
+      height: 45,
+      minWidth: 150,
       color: color,
       onPressed: onPress,
       shape: RoundedRectangleBorder(borderRadius: border),
@@ -229,11 +239,12 @@ class MusicContainer extends StatelessWidget {
     return Column(
       children: [
         Row(
+          // mainAxisAlignment: MainAxisAlignment.,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '$key : ',
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(
               width: 10,
@@ -241,8 +252,11 @@ class MusicContainer extends StatelessWidget {
             Flexible(
               child: Text(
                 value,
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                // textAlign: TextAlign.end,
                 // overflow: TextOverflow.fade,
               ),
             ),

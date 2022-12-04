@@ -7,8 +7,14 @@ import 'package:playbeat/Controllers/home_controller.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/pages/Music/songs_view.dart';
 
-class CategoryView extends StatelessWidget {
-  CategoryView({super.key});
+class CategoryView extends StatefulWidget {
+  const CategoryView({super.key});
+
+  @override
+  State<CategoryView> createState() => _CategoryViewState();
+}
+
+class _CategoryViewState extends State<CategoryView> {
   final homeController = Get.put(HomeController());
 
   Future getData() async {
@@ -19,6 +25,11 @@ class CategoryView extends StatelessWidget {
     } catch (e) {
       errorOverlay(e.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -42,10 +53,11 @@ class CategoryView extends StatelessWidget {
                   onTap: () {
                     Get.to(
                       () => SongView(
-                        categoryId: data['title'],
+                        categoryTitle: data['title'],
                         isAllSongs: false,
                         isAdmin: false,
                         userUploads: false,
+                        isFavoriteSongs: false,
                       ),
                     );
                   },

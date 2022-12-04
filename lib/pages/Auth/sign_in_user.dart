@@ -6,9 +6,9 @@ import 'package:playbeat/Controllers/auth_controller.dart';
 import 'package:playbeat/Models/user_model.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/pages/Auth/forgot_password.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
-import 'package:playbeat/pages/Widgets/rounded_password_field.dart';
-import 'package:playbeat/pages/Widgets/rounded_text_field.dart';
+import 'package:playbeat/Widgets/round_button.dart';
+import 'package:playbeat/Widgets/rounded_password_field.dart';
+import 'package:playbeat/Widgets/rounded_text_field.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({

@@ -3,15 +3,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:playbeat/Controllers/upload_controller.dart';
 import 'package:playbeat/Models/song_model.dart';
 import 'package:playbeat/Services/db_services.dart';
 import 'package:playbeat/Services/storage_services.dart';
 import 'package:playbeat/Utilities/global_variables.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
-import 'package:playbeat/pages/Widgets/input_field.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
+import 'package:playbeat/pages/Auth/sign_in_user.dart';
+import 'package:playbeat/Widgets/input_field.dart';
+import 'package:playbeat/Widgets/round_button.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({Key? key}) : super(key: key);
@@ -30,7 +30,6 @@ class _UploadPageState extends State<UploadPage> {
   PlatformFile? pickedImageFile;
   PlatformFile? pickedAudioFile;
   DateTime selectedDate = DateTime.now();
-  // String date = Forma
 
   String selectedCategory = 'Pop';
   List<String> categoryList = [
@@ -39,9 +38,8 @@ class _UploadPageState extends State<UploadPage> {
     'Hip Hop',
     'Electronic',
     'Classic',
-    'Others'
+    'Other'
   ];
-  final uploadController = Get.put(UploadController());
 
   @override
   Widget build(BuildContext context) {
@@ -145,30 +143,64 @@ class _UploadPageState extends State<UploadPage> {
         RoundButton(
           size: size,
           onPress: () async {
-            if (_formKey.currentState!.validate()) {
-              try {
-                loadingOverlay('Uploading');
-                final imageUrl =
-                    await StorageService().uploadImageFile(pickedImageFile);
-                final songUrl =
-                    await StorageService().uploadAudioFile(pickedAudioFile);
-                SongModel songModel = SongModel(
-                  title: titleController.text,
-                  singer: singerController.text,
-                  writer: writerController.text,
-                  uploadedDate:
-                      DateFormat('yyyy-MM-dd – kk:mm').format(selectedDate),
-                  category: selectedCategory,
-                  imageUrl: imageUrl,
-                  uploadedBy: userID.value,
-                  songUrl: songUrl,
-                );
-                await DBServices().uploadSong(songModel);
-                Get.back(closeOverlays: true);
-              } catch (e) {
-                errorOverlay(e.toString());
-                log(e.toString());
+            if (userID.value != '') {
+              if (_formKey.currentState!.validate()) {
+                try {
+                  loadingOverlay('Uploading');
+                  final imageUrl =
+                      await StorageService().uploadImageFile(pickedImageFile);
+                  final songUrl =
+                      await StorageService().uploadAudioFile(pickedAudioFile);
+                  SongModel songModel = SongModel(
+                    title: titleController.text,
+                    singer: singerController.text,
+                    writer: writerController.text,
+                    uploadedDate:
+                        DateFormat('yyyy-MM-dd – kk:mm').format(selectedDate),
+                    category: selectedCategory,
+                    imageUrl: imageUrl,
+                    uploadedBy: userID.value,
+                    songUrl: songUrl,
+                    likedBy: [],
+                  );
+                  await DBServices().uploadSong(songModel);
+                  _formKey.currentState?.reset();
+                  Get.back(closeOverlays: true);
+                  Get.defaultDialog(
+                    title: 'Uploaded',
+                    content: const Text('Check the status in your uploads'),
+                  );
+                } catch (e) {
+                  errorOverlay(e.toString());
+                  log(e.toString());
+                }
               }
+            } else {
+              Get.defaultDialog(
+                title: 'Alert',
+                content: const Text('You need to logged in !'),
+                actions: [
+                  ElevatedButton.icon(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    onPressed: () {
+                      Get.back();
+                      _formKey.currentState?.reset();
+                    },
+                    icon: const Icon(Icons.close),
+                    label: const Text('Close'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Get.to(
+                        () => const AuthScreen(),
+                      );
+                    },
+                    icon: const Icon(Icons.login),
+                    label: const Text('Login'),
+                  ),
+                ],
+              );
             }
           },
           text: 'Upload',

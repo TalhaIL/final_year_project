@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:playbeat/Controllers/auth_controller.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/pages/Admin/admin_approval_page.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
-import 'package:playbeat/pages/Widgets/rounded_password_field.dart';
-import 'package:playbeat/pages/Widgets/rounded_text_field.dart';
+import 'package:playbeat/Widgets/round_button.dart';
+import 'package:playbeat/Widgets/rounded_password_field.dart';
+import 'package:playbeat/Widgets/rounded_text_field.dart';
 
 class AdminSignIn extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();

@@ -13,6 +13,7 @@ class UsersUploads extends StatelessWidget {
       body: const SongView(
         isAdmin: false,
         userUploads: true,
+        isFavoriteSongs: false,
       ),
     );
   }

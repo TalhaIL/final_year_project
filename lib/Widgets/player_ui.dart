@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:playbeat/Services/player_common.dart';
-
-import '../../Constants/global_var.dart';
+import 'package:playbeat/Utilities/global_variables.dart';
+import 'package:playbeat/pages/Music/songs_view.dart';
+import 'package:rxdart/rxdart.dart' as rx;
 
 class PlayerUi extends StatelessWidget {
   const PlayerUi({
     Key? key,
-    required AudioPlayer player,
-    required Stream<PositionData> positionDataStream,
-  })  : _player = player,
-        _positionDataStream = positionDataStream,
-        super(key: key);
-
-  final AudioPlayer _player;
-  final Stream<PositionData> _positionDataStream;
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Stream<PositionData> positionDataStream =
+        rx.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+      player.positionStream,
+      player.bufferedPositionStream,
+      player.durationStream,
+      (position, bufferedPosition, duration) =>
+          PositionData(position, bufferedPosition, duration ?? Duration.zero),
+    );
     return SafeArea(
         child: Container(
       alignment: Alignment.center,
@@ -29,9 +31,9 @@ class PlayerUi extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ControlButtons(_player),
+          ControlButtons(player),
           StreamBuilder<PositionData>(
-            stream: _positionDataStream,
+            stream: positionDataStream,
             builder: (context, snapshot) {
               final positionData = snapshot.data;
               return SeekBar(
@@ -40,13 +42,13 @@ class PlayerUi extends StatelessWidget {
                 bufferedPosition:
                     positionData?.bufferedPosition ?? Duration.zero,
                 onChangeEnd: (newPosition) {
-                  _player.seek(newPosition);
+                  player.seek(newPosition);
                 },
               );
             },
           ),
           StreamBuilder<SequenceState?>(
-              stream: _player.sequenceStateStream,
+              stream: player.sequenceStateStream,
               builder: (context, snapshot) {
                 Future.delayed(Duration.zero).then((value) {
                   if (snapshot.hasData) {
@@ -59,9 +61,7 @@ class PlayerUi extends StatelessWidget {
               }),
         ],
       ),
-    )
-        //         AudioPlayerWidget(assetsAudioPlayer: _assetsAudioPlayer)),
-        );
+    ));
   }
 }
 

@@ -6,8 +6,8 @@ import 'package:playbeat/Services/db_services.dart';
 import 'package:playbeat/Services/storage_services.dart';
 import 'package:playbeat/Utilities/input_valiators.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
-import 'package:playbeat/pages/Widgets/input_field.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
+import 'package:playbeat/Widgets/input_field.dart';
+import 'package:playbeat/Widgets/round_button.dart';
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});

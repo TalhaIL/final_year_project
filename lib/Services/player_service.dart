@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+// ignore: depend_on_referenced_packages
 import 'package:audio_session/audio_session.dart';
 import 'package:playbeat/Models/song_model.dart';
-
-import '../Constants/global_var.dart';
+import 'package:playbeat/Utilities/global_variables.dart';
 
 class PlayerService {
   Future<void> buildPlayer(
@@ -20,9 +20,8 @@ class PlayerService {
     });
     // Listen to errors during playback.
 
-    player.playbackEventStream.listen((event) {
-      // log('playback: ${event.currentIndex}');
-    }, onError: (Object e, StackTrace stackTrace) {
+    player.playbackEventStream.listen((event) {},
+        onError: (Object e, StackTrace stackTrace) {
       log('A stream error occurred: $e');
     });
     try {

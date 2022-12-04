@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:playbeat/Controllers/bindings.dart';
+import 'package:playbeat/Controllers/user_controller.dart';
 import 'package:playbeat/Models/user_model.dart';
 import 'package:playbeat/Services/db_services.dart';
+import 'package:playbeat/Utilities/global_variables.dart';
 import 'package:playbeat/Utilities/overlays_widgets.dart';
 import 'package:playbeat/pages/Home/home_page.dart';
+import 'package:playbeat/pages/Music/songs_view.dart';
 import 'package:playbeat/pages/main_screen.dart';
 // import 'package:playbeat/pages/Auth/verify_email.dart';
 // import 'package:playbeat/pages/main_screen.dart';
@@ -108,7 +111,15 @@ class AuthController extends GetxController {
     }
   }
 
-  void logout() {
-    auth.signOut();
+  void logout() async {
+    isPlaying = false.obs;
+    currentAudioText = ''.obs;
+    isAudioLoading = false.obs;
+
+    player.dispose();
+    isSignedIn.value = false;
+    userID.value = '';
+    Get.find<UserController>().clearUser();
+    await auth.signOut();
   }
 }

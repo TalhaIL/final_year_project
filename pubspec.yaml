@@ -52,6 +52,7 @@ dependencies:
   just_audio_background: ^0.0.1-beta.7  
   email_auth: ^1.0.0
   pin_code_fields: ^7.4.0
+  flutter_slidable: ^2.0.0
   # audio_service: ^0.18.7
   # rxdart: ^0.27.5
   # open_file: ^2.1.1
@@ -87,11 +88,10 @@ flutter:
     - assets/images/categories/hiphop.jpg 
     - assets/images/categories/electronic.jpg
     - assets/images/categories/classic.jpg 
-    - assets/images/music_icon.png
     - assets/images/Admin.png
-    - assets/images/SongsImages/ayaLariye.jpg
     - assets/images/Logo.jpg
-    
+    - assets/images/privacy.png
+    - assets/images/about.png
      
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

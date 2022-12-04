@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:playbeat/pages/Auth/sign_in_admin.dart';
 import 'package:playbeat/pages/Auth/sign_in_user.dart';
-import 'package:playbeat/pages/Widgets/round_button.dart';
+import 'package:playbeat/pages/Home/home_page.dart';
+import 'package:playbeat/Widgets/round_button.dart';
+import 'package:playbeat/pages/Music/songs_view.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -16,10 +19,26 @@ class MainScreen extends StatelessWidget {
         child: Column(
           children: [
             Stack(
-              children: const [
-                Image(
+              children: [
+                const Image(
                   height: 350,
                   image: AssetImage('assets/images/mic_drop.png'),
+                ),
+                Positioned(
+                  top: 10,
+                  right: 0,
+                  child: TextButton(
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onPressed: () {
+                      player = AudioPlayer();
+                      Get.off(
+                        () => const HomePage(),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

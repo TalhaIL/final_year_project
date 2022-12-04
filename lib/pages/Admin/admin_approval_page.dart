@@ -23,6 +23,7 @@ class AdminApproval extends StatelessWidget {
         body: const SongView(
           isAdmin: true,
           userUploads: false,
+          isFavoriteSongs: false,
         ));
   }
 }

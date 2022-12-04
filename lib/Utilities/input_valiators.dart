@@ -22,5 +22,3 @@ final confirmPasswordValidator =
     MatchValidator(errorText: 'your password is not matching');
 
 final requiredValidator = RequiredValidator(errorText: 'Required');
-
-// final nullValidatior = MultiValidator([]);
