@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "671347531098",
+    "project_id": "play-beat-d824c",
+    "storage_bucket": "play-beat-d824c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671347531098:android:2b3a2602906fa64c84e763",
+        "android_client_info": {
+          "package_name": "com.example.playbeat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671347531098-31olfjha36cveiaorji2mapvh0esker1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1u4ftVzl6bCnofC8L3tkUMF7aFT4Y-ys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671347531098-31olfjha36cveiaorji2mapvh0esker1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
